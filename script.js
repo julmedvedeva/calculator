@@ -1,18 +1,18 @@
-let storage = { val1: 0, val2: 0 };
+let storage = {
+  val1: 0,
+  val2: 0,
+  safe: function (key, val) {
+    this[key] = val;
+  },
+};
 
-function saveToStorage(key, value) {
-  storage[key] = value;
+function checkValue(val) {
+  return typeof +val === 'number' && !isNaN(val);
 }
 
-function checkValue(value) {
-  typeof val == 'number' && +val !== NaN ? true : false;
-}
-
-function printFromStorage(check1, check2) {
-  if ((check2, check1)) {
-    check1 = checkValue(storage.val1);
-    check2 = checkValue(storage.val2);
-    document.querySelector('#result').innerHTML = `результат ${check1 + check2}`;
+function printFromStorage() {
+  if (checkValue(storage.val1) && checkValue(storage.val2)) {
+    document.querySelector('#result').innerHTML = `результат ${+storage.val1 + +storage.val2}`;
   } else {
     document.querySelector('#result').innerHTML = 'введи число';
   }
