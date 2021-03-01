@@ -35,5 +35,3 @@ document.querySelector('#input1').addEventListener('keyup', function ({ target: 
 document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val2', value);
 });
-console.log(storage.val1, storage.val12);
-console.log(typeof storage.print);
