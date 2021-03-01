@@ -1,34 +1,39 @@
 let storage = {
   val1: 0,
   val2: 0,
-  settVal(val) {
+  set Val(val) {
     if (typeof +val === 'number' && isNaN(val)) {
-      return val;
+      val;
+    }
+    if (typeof +val === 'NaN') {
+      document.querySelector('#result').innerHTML = `результат 0`;
     } else {
-      return 0;
+      document.querySelector('#result').innerHTML = `ЧИВО`;
     }
   },
   safe(key, val) {
-    this[key] = val;
+    return (this[key] = val);
   },
-  getVal1() {
+  get Val1() {
     return this.val1;
   },
-  getVal2() {
+  get Val2() {
     return this.val2;
   },
-  print() {
-    return `результат ${this.getVal1 + this.getVal2}`;
+  print(val1, val2) {
+    return (document.querySelector('#result').innerHTML = `результат ${+val1 + +val2}`);
   },
   update(key, val) {
     this.safe(key, val);
-    this.print();
+    this.print(this.Val1, this.Val2);
   },
 };
 
 document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
-  storage.update('val2', value);
+  storage.update('val1', value);
 });
 document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val2', value);
 });
+console.log(storage.val1, storage.val12);
+console.log(typeof storage.print);
