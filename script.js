@@ -1,24 +1,22 @@
 let storage = {
-  val1: 0,
-  val2: 0,
+  _val1: 0,
+  _val2: 0,
+  get Val1() {
+    return this._val1;
+  },
+  get Val2() {
+    return this._val2;
+  },
   set Val(val) {
-    if (typeof +val === 'number' && isNaN(val)) {
+    if (typeof +val === 'number' && !isNaN(val)) {
       val;
     }
-    if (typeof +val === 'NaN') {
+    if (isNaN(val)) {
       document.querySelector('#result').innerHTML = `результат 0`;
-    } else {
-      document.querySelector('#result').innerHTML = `ЧИВО`;
     }
   },
   safe(key, val) {
     return (this[key] = val);
-  },
-  get Val1() {
-    return this.val1;
-  },
-  get Val2() {
-    return this.val2;
   },
   print(val1, val2) {
     return (document.querySelector('#result').innerHTML = `результат ${+val1 + +val2}`);
