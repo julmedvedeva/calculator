@@ -41,29 +41,20 @@
 //   storage.update('Val2', value);
 // });
 
-
- function  calcRange(from, to) {
-   let sum = 0;
-   while(from<=to) {
-     sum += from;
-     from++;
-   }
-   return sum;
- }
-calcRange(2,4);
-function checkIsInRange(from, to, num) {
-  let result;
-  if (num >= from && num <= to) {
-    result = true;
-  } else {
-    result = false;
+function calcRange(from, to) {
+  let sum = 0;
+  while (from <= to) {
+    sum += from;
+    from++;
   }
-  return result
+  return sum;
 }
-checkIsInRange(1,4, 2);
+calcRange(2, 4);
+function checkIsInRange(from, to, num) {
+  num >= from && num <= to;
+}
+checkIsInRange(1, 4, 2);
 function calcRangesDiff(f1, t1, f2, t2) {
-  let one = calcRange(f2, t2);
-  let two = calcRange(f1, t1);
-  return one - two;
+  return calcRange(f2, t2) - calcRange(f1, t1);
 }
-calcRangesDiff(2,4,76,99)
+calcRangesDiff(2, 4, 76, 99);
