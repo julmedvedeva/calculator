@@ -1,60 +1,84 @@
-// let storage = {
-//   _val1: 0,
-//   _val2: 0,
-//   get Val1() {
-//     return this._val1;
-//   },
-//   get Val2() {
-//     return this._val2;
-//   },
-//   set Val1(val) {
-//     if (typeof +val === 'number' && !isNaN(val)) {
-//       this._val1 = val;
-//     } else {
-//       this._val1 = 0;
-//     }
-//   },
-//   set Val2(val) {
-//     if (typeof +val === 'number' && !isNaN(val)) {
-//       this._val2 = val;
-//     } else {
-//       this._val2 = 0;
-//     }
-//   },
-//
-//   safe(key, val) {
-//     return (this[key] = val);
-//   },
-//   print(val1, val2) {
-//     document.querySelector('#result').innerHTML = `результат ${+val1 + +val2}`;
-//   },
-//   update(key, val) {
-//     this.safe(key, val);
-//     this.print(this.Val1, this.Val2);
-//   },
-// };
-//
-// document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
-//   storage.update('Val1', value);
-// });
-// document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
-//   storage.update('Val2', value);
-// });
+let saveRes = document.createElement('div');
+saveRes.id = 'saveRes';
+saveRes.style.height = '100px';
+saveRes.style.width = '100px';
+saveRes.style.backgroundColor = 'red';
+console.log(saveRes);
+let allResults = document.createElement('div');
+allResults.id = 'allResults';
+document.body.append(saveRes);
+document.body.append(allResults);
 
-function calcRange(from, to) {
-  let sum = 0;
-  while (from <= to) {
-    sum += from;
-    from++;
-  }
-  return sum;
-}
-calcRange(2, 4);
-function checkIsInRange(from, to, num) {
-  num >= from && num <= to;
-}
-checkIsInRange(1, 4, 2);
-function calcRangesDiff(f1, t1, f2, t2) {
-  return calcRange(f2, t2) - calcRange(f1, t1);
-}
-calcRangesDiff(2, 4, 76, 99);
+let storage = {
+  _val1: 0,
+  _val2: 0,
+  result: [],
+  get Val1() {
+    return this._val1;
+  },
+  get Val2() {
+    return this._val2;
+  },
+  get ValsSum() {
+    return this._val1 + this._val2;
+  },
+  set Val1(val) {
+    if (typeof +val === 'number' && !isNaN(val)) {
+      this._val1 = val;
+    } else {
+      this._val1 = 0;
+    }
+  },
+  set Val2(val) {
+    if (typeof +val === 'number' && !isNaN(val)) {
+      this._val2 = val;
+    } else {
+      this._val2 = 0;
+    }
+  },
+  safe() {
+    return print(this.ValsSum);
+  },
+  print() {
+    document.querySelector('#result').innerHTML = `результат ${this.ValsSum}`;
+  },
+  safe1(key, val) {
+    return (this[key] = val);
+  },
+  print1(val1, val2) {
+    document.querySelector('#result').innerHTML = `результат ${+val1 + +val2}`;
+  },
+  update1(key, val) {
+    this.safe1(key, val);
+    this.print1(this.Val1, this.Val2);
+  },
+  printCurrentResult() {
+    return (document.querySelector('#result').innerHTML = `результат ${this.ValsSum}`);
+  },
+  printAllResults(arr) {
+    let a = this.generateListMarkup(arr);
+    return (allResults.innerHTML = a);
+  },
+  generateListMarkup(arr) {
+    let list = arr.map((item) => `<li>${item}</li>`).join('');
+    list = `<ul>${list}</ul>`;
+    return list;
+  },
+  saveResult(val) {
+    if (val > 0) {
+      this.result = this.printCurrentResult(val);
+    } else {
+      alert('Чойта ты тут делаишь?');
+    }
+  },
+};
+
+document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
+  storage.update1('Val1', value);
+});
+document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
+  storage.update1('Val2', value);
+});
+document.querySelector('#saveRes').addEventListener('keyup', function ({ target: { value } }) {
+  storage.saveResult();
+});
