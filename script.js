@@ -36,21 +36,15 @@ let storage = {
       this._val2 = 0;
     }
   },
-  safe() {
-    return print(this.ValsSum);
-  },
-  print() {
-    document.querySelector('#result').innerHTML = `результат ${this.ValsSum}`;
-  },
-  safe1(key, val) {
+  safe(key, val) {
     return (this[key] = val);
   },
-  print1(val1, val2) {
+  print(val1, val2) {
     document.querySelector('#result').innerHTML = `результат ${+val1 + +val2}`;
   },
   update1(key, val) {
-    this.safe1(key, val);
-    this.print1(this.Val1, this.Val2);
+    this.safe(key, val);
+    this.print(this.Val1, this.Val2);
   },
   printCurrentResult() {
     return (document.querySelector('#result').innerHTML = `результат ${this.ValsSum}`);
