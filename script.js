@@ -11,7 +11,7 @@ function CreateElementFactory(height, width, backgroundColor) {
   this.style.width = width;
   this.style.backgroundColor = backgroundColor;
 }
-saveRes.style = CreateElementFactory('saveRes', '50px', '200px', 'red');
+saveRes.style = new CreateElementFactory('saveRes', '50px', '200px', 'red');
 
 const allResults = document.createElement('div');
 allResults.id = 'allResults';
