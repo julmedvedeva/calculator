@@ -1,10 +1,9 @@
 const saveRes = document.createElement('div');
 
 saveRes.id = 'saveRes';
-saveRes.style.height = '100px';
-saveRes.style.width = '100px';
+saveRes.style.height = '50px';
+saveRes.style.width = '200px';
 saveRes.style.backgroundColor = 'red';
-console.log(saveRes);
 
 const allResults = document.createElement('div');
 allResults.id = 'allResults';
@@ -51,12 +50,18 @@ const storage = {
     document.querySelector('#result').innerHTML = `результат ${this.valsSum}`;
   },
   printAllResults(arr) {
-    allResults.innerHTML = this.generateListMarkup(arr);
+    allResults.innerHTML = '';
+    allResults.appendChild(this.generateListMarkup(arr));
   },
   generateListMarkup(arr) {
-    let list = arr.map((item) => `<li>${item}</li>`).join('');
-    list = `<ul>${list}</ul>`;
-    return list;
+    const ul = document.createElement('ul');
+    arr.forEach((item) => {
+      const li = document.createElement('li');
+      li.innerText = item;
+      li.style.listStyleType = 'none';
+      ul.appendChild(li);
+    });
+    return ul;
   },
   updateList() {
     this.result.push(this.valsSum);
