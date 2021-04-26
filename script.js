@@ -1,9 +1,17 @@
 const saveRes = document.createElement('div');
 
-saveRes.id = 'saveRes';
-saveRes.style.height = '50px';
-saveRes.style.width = '200px';
-saveRes.style.backgroundColor = 'red';
+// saveRes.id = 'saveRes';
+// saveRes.style.height = '50px';
+// saveRes.style.width = '200px';
+// saveRes.style.backgroundColor = 'red';
+
+function CreateElementFactory(height, width, backgroundColor) {
+  // this.id = id;
+  this.style.height = height;
+  this.style.width = width;
+  this.style.backgroundColor = backgroundColor;
+}
+saveRes.style = CreateElementFactory('saveRes', '50px', '200px', 'red');
 
 const allResults = document.createElement('div');
 allResults.id = 'allResults';
