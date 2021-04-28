@@ -1,17 +1,27 @@
 const saveRes = document.createElement('div');
 
-// saveRes.id = 'saveRes';
-// saveRes.style.height = '50px';
-// saveRes.style.width = '200px';
-// saveRes.style.backgroundColor = 'red';
+let a = fetch('./data.json')
+  .then((res) => res.json())
+  .then((res) => console.log(res));
 
-function CreateElementFactory(height, width, backgroundColor) {
-  // this.id = id;
-  this.style.height = height;
-  this.style.width = width;
-  this.style.backgroundColor = backgroundColor;
+function updateElementStyles(el, propsObj, id) {
+  //вторая часть выполнится если первая вернет true
+  id && (el.id = id);
+
+  for (let key in propsObj) {
+    el.style.hasOwnProperty(key) && (el.style[key] = propsObj[key]);
+  }
 }
-saveRes.style = new CreateElementFactory('saveRes', '50px', '200px', 'red');
+
+updateElementStyles(
+  saveRes,
+  {
+    height: '100px',
+    width: '100px',
+    backgroundColor: 'red',
+  },
+  'saveRes',
+);
 
 const allResults = document.createElement('div');
 allResults.id = 'allResults';
