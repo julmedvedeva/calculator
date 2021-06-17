@@ -1,41 +1,7 @@
 const saveRes = document.createElement('div');
-function updateElementStyles(el, propsObj, id) {
-  //вторая часть выполнится если первая вернет true
-  id && (el.id = id);
-
-  for (let key in propsObj) {
-    el.style.hasOwnProperty(key) && (el.style[key] = propsObj[key]);
-  }
-}
-updateElementStyles(
-  saveRes,
-  {
-    height: '100px',
-    width: '100px',
-    backgroundColor: 'red',
-  },
-  'saveRes',
-);
-
-const requestUrl = './data.json';
-async function getData(url) {
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    value = Object.values(data).join();
-    allResults.textContent = value;
-    return value;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-getData(requestUrl);
-
 const allResults = document.createElement('div');
-allResults.id = 'allResults';
-document.body.append(saveRes);
-document.body.append(allResults);
+const container = document.querySelector('.container');
+const requestUrl = './data.json';
 
 const storage = {
   _val1: 0,
@@ -96,11 +62,50 @@ const storage = {
     return ul;
   },
 
-  updateList() {
-    this.result.push(this.valsSum);
+  updateList(result) {
+    if (result) {
+      this.result = result instanceof Array ? [...this.result, ...result] : [...this.result, result];
+    } else {
+      this.result.push(this.valsSum);
+    }
     this.printAllResults(this.result);
   },
 };
+
+function updateElementStyles(el, propsObj, id) {
+  //вторая часть выполнится если первая вернет true
+  id && (el.id = id);
+
+  for (let key in propsObj) {
+    el.style.hasOwnProperty(key) && (el.style[key] = propsObj[key]);
+  }
+}
+
+async function getData(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    storage.updateList(Object.values(data));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+updateElementStyles(
+  saveRes,
+  {
+    height: '100px',
+    width: '100px',
+    backgroundColor: 'crimson',
+    border: '1px solid crimson',
+    borderRadius: '13px',
+  },
+  'saveRes',
+);
+
+allResults.id = 'allResults';
+container.append(saveRes);
+container.append(allResults);
 
 document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val1', value);
@@ -109,3 +114,5 @@ document.querySelector('#input2').addEventListener('keyup', function ({ target: 
   storage.update('val2', value);
 });
 document.querySelector('#saveRes').addEventListener('click', () => storage.updateList());
+
+getData(requestUrl);
