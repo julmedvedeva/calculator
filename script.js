@@ -33,6 +33,10 @@ const storage = {
     }
   },
 
+  generateId() {
+    return Math.floor(Math.random() * 100);
+  },
+
   save(key, val) {
     this[key] = val;
   },
@@ -58,20 +62,21 @@ const storage = {
   },
 
   generateListMarkup(arr) {
-    const generateId = Math.floor(Math.random() * 100);
     const li = document.createElement('li');
 
     const button = document.createElement('button');
     button.innerHTML = 'X';
-
-    li.setAttribute('data-id', generateId.toString());
+    li.setAttribute('data-id', this.generateId().toString());
 
     arr.map((item) => {
-      li.innerHTML = item;
+      li.innerHTML = item.value;
       li.appendChild(button);
       li.style.listStyleType = 'none';
-      button.onclick = () => this.ul.removeChild(li);
       this.ul.appendChild(li);
+    });
+
+    button.addEventListener('click', () => {
+      this.ul.removeChild(li);
     });
 
     return this.ul;
@@ -81,9 +86,11 @@ const storage = {
     if (result) {
       this.result = result instanceof Array ? [...this.result, ...result] : [...this.result, result];
     } else {
-      this.result.push(this.valsSum);
+      this.result.push({ id: this.generateId(), value: this.valsSum });
     }
+
     this.printAllResults(this.result);
+    console.log('result', this.result);
   },
 };
 
@@ -100,7 +107,8 @@ async function getData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    storage.updateList(Object.values(data));
+
+    storage.result.push(...data.map((obj) => ({ ...obj })));
   } catch (e) {
     console.log(e);
   }
