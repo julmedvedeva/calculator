@@ -7,6 +7,7 @@ const storage = {
   _val1: 0,
   _val2: 0,
   result: [],
+  ul: document.createElement('ul'),
 
   get val1() {
     return this._val1;
@@ -15,7 +16,6 @@ const storage = {
     return this._val2;
   },
   get valsSum() {
-    //сюда нужно вложть генерацию айди через рендом
     return this._val1 + this._val2;
   },
   set val1(val) {
@@ -54,21 +54,27 @@ const storage = {
   generateButtonDelete() {
     const button = document.createElement('button');
     button.innerHTML = 'X';
-
     return button;
   },
 
   generateListMarkup(arr) {
-    const ul = document.createElement('ul');
+    const generateId = Math.floor(Math.random() * 100);
+    const li = document.createElement('li');
 
-    arr.forEach((item) => {
-      const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.innerHTML = 'X';
+
+    li.setAttribute('data-id', generateId.toString());
+
+    arr.map((item) => {
       li.innerHTML = item;
-      li.appendChild(this.generateButtonDelete());
+      li.appendChild(button);
       li.style.listStyleType = 'none';
-      ul.appendChild(li);
+      button.onclick = () => this.ul.removeChild(li);
+      this.ul.appendChild(li);
     });
-    return ul;
+
+    return this.ul;
   },
 
   updateList(result) {
@@ -79,17 +85,8 @@ const storage = {
     }
     this.printAllResults(this.result);
   },
-
-  removeItem() {
-    const li = document.querySelectorAll('ul');
-
-    console.log('show body', li);
-  },
-  getRandom(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  },
 };
-storage.removeItem();
+
 function updateElementStyles(el, propsObj, id) {
   //вторая часть выполнится если первая вернет true
   id && (el.id = id);
