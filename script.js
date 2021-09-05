@@ -1,14 +1,21 @@
 const saveRes = document.createElement('div');
 const allResults = document.createElement('div');
+const list = document.createElement('ul');
 const container = document.querySelector('.container');
 const requestUrl = './data.json';
+
+allResults.id = 'allResults';
+container.append(saveRes);
+container.append(allResults);
+allResults.append(list);
 
 const storage = {
   _val1: 0,
   _val2: 0,
-  result: [],
-  ul: document.createElement('ul'),
+  items: [],
+  ul: document.querySelector('ul'),
 
+  //работа со значением из интупа
   get val1() {
     return this._val1;
   },
@@ -52,45 +59,56 @@ const storage = {
 
   printAllResults(arr) {
     allResults.innerHTML = '';
-    allResults.appendChild(this.generateListMarkup(arr));
+    allResults.appendChild(this.addItem(arr));
   },
 
   generateButtonDelete() {
     const button = document.createElement('button');
     button.innerHTML = 'X';
+    button.className = 'delete';
+
     return button;
   },
 
-  generateListMarkup(arr) {
-    const li = document.createElement('li');
+  createItem() {
+    // Создает элемент вида:
+    const item = {
+      element: document.createElement('li'),
+      id: this.generateId(),
+      value: this.valsSum,
+      button: this.generateButtonDelete(),
+    };
+    item.element.setAttribute('data-id', item.id);
+    item.element.innerHTML = item.value;
+    item.element.appendChild(item.button);
+    item.button.addEventListener('click', this.removeItem(item.id));
 
-    const button = document.createElement('button');
-    button.innerHTML = 'X';
-    li.setAttribute('data-id', this.generateId().toString());
+    // console.log('remove', this.removeItem(item.id));
 
-    arr.map((item) => {
-      li.innerHTML = item.value;
-      li.appendChild(button);
-      li.style.listStyleType = 'none';
-      this.ul.appendChild(li);
-    });
-
-    button.addEventListener('click', () => {
-      this.ul.removeChild(li);
-    });
-
-    return this.ul;
+    // Тут же установи ему data-id, наполни
+    // его всяким и повесь эвент на его кнопку
+    return item;
   },
 
-  updateList(result) {
-    if (result) {
-      this.result = result instanceof Array ? [...this.result, ...result] : [...this.result, result];
-    } else {
-      this.result.push({ id: this.generateId(), value: this.valsSum });
-    }
+  addItem(val) {
+    const item = this.createItem(val);
+    this.items.push({ id: item.id, value: item.value });
+    this.ul.appendChild(item.element);
+  },
+  removeItem(itemId) {
+    console.log(itemId);
+    // Удалим item из массива items и из разметки
 
-    this.printAllResults(this.result);
-    console.log('result', this.result);
+    const data_id = document.querySelector(`*[data-id="${itemId}"]`);
+    console.log('dataId', data_id);
+
+    // const parents = document.querySelector(data_id);
+    // console.log('parents', parents);
+    // for (var i = 0, parent; (parent = parents[i]); i++)
+    //   parent.onclick = function (e) {
+    //     if (e.target.className == 'target') alert(this.className);
+    //   };
+    // deletebleItem.element.addEventListener('click', alert('put in x'));
   },
 };
 
@@ -108,7 +126,7 @@ async function getData(url) {
     const response = await fetch(url);
     const data = await response.json();
 
-    storage.result.push(...data.map((obj) => ({ ...obj })));
+    return storage.items.push(...data.map((obj) => ({ ...obj })));
   } catch (e) {
     console.log(e);
   }
@@ -126,16 +144,14 @@ updateElementStyles(
   'saveRes',
 );
 
-allResults.id = 'allResults';
-container.append(saveRes);
-container.append(allResults);
-
 document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val1', value);
 });
 document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val2', value);
 });
-document.querySelector('#saveRes').addEventListener('click', () => storage.updateList());
+// document.querySelector('#saveRes').addEventListener('click', () => storage.updateList());
 
 getData(requestUrl);
+
+document.querySelector('#saveRes').addEventListener('click', () => storage.addItem());
