@@ -1,22 +1,46 @@
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+    <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link href="style.css" rel="stylesheet" />
   </head>
-  <body style='background-color: darkcyan'>
-
-      <h1>это калькулятор</h1>
-    <form class="input">
-      Введи первое число:
-      <input type="text" id="input1" />
-      Введи второе число:
-      <input type="text" id="input2" />
-    </form>
-    <div class="container">
-      <button class="result" id="result" type="button">результат</button>
+  <body>
+    <h1>это калькулятор</h1>
+    <span>(но это не точно)</span>
+    <div class="main">
+      <div class="col">
+        <form class="row">
+          <div class="col">
+            <label for="input1"> Введи первое число:</label>
+            <input type="text" id="input1" name="input1" />
+          </div>
+          <div class="col">
+            <label for="input2">Введи второе число:</label>
+            <input type="text" id="input2" name="input2" />
+          </div>
+        </form>
+      </div>
+      <div class="col">
+        <div class="container">
+          <div class="result" id="result" type="button">
+            Результат
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>

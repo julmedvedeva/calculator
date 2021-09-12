@@ -57,16 +57,22 @@ const storage = {
     document.querySelector('#result').innerHTML = `результат ${this.valsSum}`;
   },
 
-  printAllResults(arr) {
+  printAllResults() {
     allResults.innerHTML = '';
-    allResults.appendChild(this.addItem(arr));
+    allResults.appendChild(this.items);
+    allResults.appendChild(this.addItem);
   },
 
   generateButtonDelete() {
     const button = document.createElement('button');
-    button.innerHTML = 'X';
+    button.innerHTML = `<i class="fas fa-backspace"></i>`;
     button.className = 'delete';
-
+    updateElementStyles(button, {
+      backgroundColor: 'darkmagenta',
+      color: 'antiquewhite',
+      border: '1px solid',
+      borderRadius: '20%',
+    });
     return button;
   },
 
@@ -78,37 +84,70 @@ const storage = {
       value: this.valsSum,
       button: this.generateButtonDelete(),
     };
+    // Тут же установи ему data-id, наполни
     item.element.setAttribute('data-id', item.id);
     item.element.innerHTML = item.value;
     item.element.appendChild(item.button);
-    item.button.addEventListener('click', this.removeItem(item.id));
-
-    // console.log('remove', this.removeItem(item.id));
-
-    // Тут же установи ему data-id, наполни
     // его всяким и повесь эвент на его кнопку
+    item.button.addEventListener('click', this.removeItem);
+
     return item;
   },
 
-  addItem(val) {
-    const item = this.createItem(val);
+  addItem() {
+    const item = this.createItem();
+    updateElementStyles(item.element, {
+      listStyle: 'none',
+      width: '20%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      fontSize: '40px',
+      margin: '1%',
+    });
     this.items.push({ id: item.id, value: item.value });
     this.ul.appendChild(item.element);
+    // this.renderForgottenElements();
   },
   removeItem(itemId) {
-    console.log(itemId);
     // Удалим item из массива items и из разметки
+    alert('нажали на кнопокь');
 
-    const data_id = document.querySelector(`*[data-id="${itemId}"]`);
-    console.log('dataId', data_id);
-
+    const data_id = document.getElementById(itemId);
+    console.log(data_id);
     // const parents = document.querySelector(data_id);
-    // console.log('parents', parents);
     // for (var i = 0, parent; (parent = parents[i]); i++)
     //   parent.onclick = function (e) {
     //     if (e.target.className == 'target') alert(this.className);
     //   };
     // deletebleItem.element.addEventListener('click', alert('put in x'));
+  },
+  removeGhostElements() {
+    // тут напиши функцию для поиска и удаления
+    // из разметки элементов, которых нет в items, но
+    // они при этом почему-то есть в разметке
+  },
+  renderForgottenElements() {
+    // debugger;
+    // тут напиши функцию для добавления в разметку
+    // элементов, которые есть в items, но их почему-то нет
+    // в разметке. Можно использовать приконое:
+    // document.querySelector(`*[data-id="${item.id}"]`)
+    const a = this.items.map((i) => {
+      const b = {
+        id: i.id,
+        value: i.value,
+        element: document.createElement('li'),
+        button: this.generateButtonDelete(),
+      };
+      b.element.setAttribute('data-id', b.id);
+      b.element.innerHTML = b.value;
+      console.log('b', b);
+      this.ul.appendChild(b.element);
+      return b;
+    });
+    console.log(a);
+    // this.ul.appendChild(a);
   },
 };
 
@@ -125,8 +164,7 @@ async function getData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-
-    return storage.items.push(...data.map((obj) => ({ ...obj })));
+    storage.items.push(...data);
   } catch (e) {
     console.log(e);
   }
@@ -150,8 +188,7 @@ document.querySelector('#input1').addEventListener('keyup', function ({ target: 
 document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val2', value);
 });
-// document.querySelector('#saveRes').addEventListener('click', () => storage.updateList());
+document.querySelector('#saveRes').addEventListener('click', () => storage.addItem());
+// document.querySelector('#saveRes').addEventListener('click', () => storage.printAllResults());
 
 getData(requestUrl);
-
-document.querySelector('#saveRes').addEventListener('click', () => storage.addItem());
