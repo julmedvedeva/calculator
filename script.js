@@ -39,6 +39,12 @@ const storage = {
       this._val2 = 0;
     }
   },
+  loading: true,
+
+  init(data) {
+    data.forEach(({ value, id }) => storage.addItem({ value, id }));
+    this.loading = false;
+  },
 
   generateId() {
     return Math.floor(Math.random() * 100);
@@ -76,12 +82,12 @@ const storage = {
     return button;
   },
 
-  createItem() {
+  createItem({ value, id }) {
     // Создает элемент вида:
     const item = {
       element: document.createElement('li'),
-      id: this.generateId(),
-      value: this.valsSum,
+      id: id || this.generateId(),
+      value: value || this.valsSum,
       button: this.generateButtonDelete(),
     };
     // Тут же установи ему data-id, наполни
@@ -89,13 +95,18 @@ const storage = {
     item.element.innerHTML = item.value;
     item.element.appendChild(item.button);
     // его всяким и повесь эвент на его кнопку
-    item.button.addEventListener('click', this.removeItem);
+    item.button.addEventListener('click', (e) => {
+      const parent = e.currentTarget.parentNode;
+      console.log('parent', parent);
+
+      this.removeItem(parent);
+    });
 
     return item;
   },
 
-  addItem() {
-    const item = this.createItem();
+  addItem(value, id) {
+    const item = this.createItem(value, id);
     updateElementStyles(item.element, {
       listStyle: 'none',
       width: '20%',
@@ -107,47 +118,21 @@ const storage = {
     });
     this.items.push({ id: item.id, value: item.value });
     this.ul.appendChild(item.element);
-    // this.renderForgottenElements();
   },
   removeItem(itemId) {
-    // Удалим item из массива items и из разметки
-    alert('нажали на кнопокь');
+    const attribute = itemId.getAttribute('data-id');
 
-    const data_id = document.getElementById(itemId);
-    console.log(data_id);
-    // const parents = document.querySelector(data_id);
-    // for (var i = 0, parent; (parent = parents[i]); i++)
-    //   parent.onclick = function (e) {
-    //     if (e.target.className == 'target') alert(this.className);
-    //   };
-    // deletebleItem.element.addEventListener('click', alert('put in x'));
-  },
-  removeGhostElements() {
-    // тут напиши функцию для поиска и удаления
-    // из разметки элементов, которых нет в items, но
-    // они при этом почему-то есть в разметке
-  },
-  renderForgottenElements() {
-    // debugger;
-    // тут напиши функцию для добавления в разметку
-    // элементов, которые есть в items, но их почему-то нет
-    // в разметке. Можно использовать приконое:
-    // document.querySelector(`*[data-id="${item.id}"]`)
-    const a = this.items.map((i) => {
-      const b = {
-        id: i.id,
-        value: i.value,
-        element: document.createElement('li'),
-        button: this.generateButtonDelete(),
-      };
-      b.element.setAttribute('data-id', b.id);
-      b.element.innerHTML = b.value;
-      console.log('b', b);
-      this.ul.appendChild(b.element);
-      return b;
+    const item = this.items.find((item) => {
+      return item.id.toString() === attribute;
     });
-    console.log(a);
-    // this.ul.appendChild(a);
+
+    if (item) {
+      this.ul.removeChild(itemId);
+      console.log(this.items, item);
+      const b = this.items.slice(item);
+      console.log(b);
+      // вырезать из массива items этот item
+    }
   },
 };
 
@@ -164,7 +149,7 @@ async function getData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    storage.items.push(...data);
+    storage.init(data);
   } catch (e) {
     console.log(e);
   }
@@ -188,7 +173,6 @@ document.querySelector('#input1').addEventListener('keyup', function ({ target: 
 document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
   storage.update('val2', value);
 });
-document.querySelector('#saveRes').addEventListener('click', () => storage.addItem());
-// document.querySelector('#saveRes').addEventListener('click', () => storage.printAllResults());
+document.querySelector('#saveRes').addEventListener('click', () => storage.addItem(storage.valsSum));
 
 getData(requestUrl);
