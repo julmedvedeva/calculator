@@ -12,33 +12,28 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
   </head>
   <body>
-    <h1>это калькулятор</h1>
-    <span>(но это не точно)</span>
+    <div class="header">
+      <h1>это калькулятор</h1>
+      <div class="subheader"><span>(но это не точно)</span></div>
+    </div>
     <div class="main">
-      <div class="col">
-        <form class="row">
-          <div class="col">
-            <label for="input1"> Введи первое число:</label>
-            <input type="text" id="input1" name="input1" />
-          </div>
-          <div class="col">
-            <label for="input2">Введи второе число:</label>
-            <input type="text" id="input2" name="input2" />
-          </div>
-        </form>
+      <div class="input">
+        <div class="input-item">
+          <label for="input1"> Введи первое число:</label>
+          <input type="text" id="input1" name="input1" />
+        </div>
+        <div class="input-item">
+          <label for="input2">Введи второе число:</label>
+          <input type="text" id="input2" name="input2" />
+        </div>
       </div>
-      <div class="col">
+      <div>
         <div class="container">
-          <div class="result" id="result" type="button">
-            Результат
-          </div>
+          <div id="result-div">Результат сложения</div>
         </div>
       </div>
     </div>
