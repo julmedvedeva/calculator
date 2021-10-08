@@ -2,7 +2,7 @@ body {
   margin: 0 auto;
   padding: 10%;
   width: auto;
-  background-color: darkcyan;
+  background: #8496b47a;
   font-family: 'Caveat', cursive;
   font-size: 20px;
 }
@@ -38,8 +38,12 @@ body {
 #input1,
 #input2 {
   margin: 5% 0 5%;
-  background-color: rgb(97, 97, 156);
-  box-sizing: border-box;
+  background: linear-gradient(
+    90deg,
+    rgba(75, 95, 144, 0.233) 0%,
+    rgba(196, 50, 246, 0.4948354341736695) 37%,
+    rgba(253, 1, 52, 0.47522759103641454) 100%
+  );
   box-sizing: border-box;
   border-radius: 5px;
   border: none;
@@ -47,10 +51,11 @@ body {
   color: goldenrod;
 }
 
-#input1:focus,
-#input2:active {
-  color: goldenrod;
-  background-color: rgb(97, 97, 156);
+#input2:focus,
+#input1:focus {
+  color: greenyellow;
+  border: 1px solid rgb(102, 75, 80);
+  border-color: rgb(114, 146, 135);
 }
 #allResults {
   position: relative;
@@ -61,7 +66,7 @@ body {
   background-color: khaki;
   margin-bottom: 1%;
   font-size: 30px;
-  border: 1px solid crimson;
+  border: 1px solid rgb(102, 75, 80);
   border-radius: 13px;
 }
 /* #saveRes {

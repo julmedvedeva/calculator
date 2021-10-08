@@ -148,10 +148,13 @@ const storage = {
       justifyContent: 'space-between',
       fontSize: '40px',
       margin: '1%',
+      border: '1px solid blue',
+      backgroundColor: 'goldenrod',
     });
 
     this.items.push({ id: item.id, value: item.value });
-    //todo это условие ломает все
+
+    //все ломает
     // if (this.items.length <= 1) {
     //   this.deleteLoader();
     // }
