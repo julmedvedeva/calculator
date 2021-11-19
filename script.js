@@ -48,12 +48,9 @@ const storage = {
   async init(requestUrl) {
     this.createLoader();
     const data = await getData(requestUrl);
-    console.log('data in init', data);
     
-    await data.forEach(({ value, id }) => {
-      console.log('value + id', {value, id})
-      return storage.addItem({ value, id });
-    });
+    await data.forEach(({ value, id }) => storage.addItem({ value, id }))
+    ;
     this.deleteLoader();
   },
   
@@ -130,7 +127,7 @@ const storage = {
   },
   
   addItem(value) {
-    const item = this.createItem({ value:value.value, id:value.id });
+    const item = this.createItem({ value: value.value, id: value.id });
     
     updateElementStyles(item.element, {
       listStyle: 'none',
