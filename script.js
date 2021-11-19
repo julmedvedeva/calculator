@@ -165,6 +165,19 @@ const storage = {
       return this.items;
     }
   },
+  
+  localStorageCustom({key, entity = '' }, action) {
+    switch (action) {
+      case 'set':
+        localStorage.setItem(key, entity);
+        break;
+      case 'get':
+        localStorage.getItem(key);
+        break;
+      default:
+        break;
+    }
+  },
 };
 
 function updateElementStyles(el, propsObj, id) {
@@ -184,6 +197,7 @@ async function getData(url) {
   }
 }
 
+storage.localStorageCustom({key:'test', entity:'testing'}, 'set');
 
 updateElementStyles(
   saveRes,
