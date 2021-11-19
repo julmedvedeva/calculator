@@ -16,19 +16,19 @@ const storage = {
   _val2: 0,
   items: [],
   ul: document.querySelector('ul'),
-
+  
   get val1() {
     return this._val1;
   },
-
+  
   get val2() {
     return this._val2;
   },
-
-  get valsSum() {
+  
+  get valSum() {
     return this._val1 + this._val2;
   },
-
+  
   set val1(val) {
     if (typeof +val === 'number' && !isNaN(val)) {
       this._val1 = +val;
@@ -36,7 +36,7 @@ const storage = {
       this._val1 = 0;
     }
   },
-
+  
   set val2(val) {
     if (typeof +val === 'number' && !isNaN(val)) {
       this._val2 = +val;
@@ -44,86 +44,78 @@ const storage = {
       this._val2 = 0;
     }
   },
-
-  loading: true,
-
-  init(data) {
-    console.log(data);
-    if (this.loading === true && data.length === 0) {
-      this.createLoader();
-    }
-
-    // if (this.loading === true && data.length > 0) {
-    data.forEach(({ value, id }) => storage.addItem({ value, id }));
-    this.loading = false;
-    // }
+  
+  async init(requestUrl) {
+    this.createLoader();
+    const data = await getData(requestUrl);
+    console.log('data in init', data);
+    
+    await data.forEach(({ value, id }) => {
+      console.log('value + id', {value, id})
+      return storage.addItem({ value, id });
+    });
+    this.deleteLoader();
   },
-
+  
   createLoader() {
     const loadingDiv = document.createElement('div');
     loadingDiv.classList.add('loading');
-    loadingDiv.innerHTML = `<div class="loading-text">
-      <span class="loading-text-words">L</span>
-      <span class="loading-text-words">O</span>
-      <span class="loading-text-words">A</span>
-      <span class="loading-text-words">D</span>
-      <span class="loading-text-words">I</span>
-      <span class="loading-text-words">N</span>
-      <span class="loading-text-words">G</span>
+    loadingDiv.innerHTML = `<div class='loading-text'>
+      <span class='loading-text-words'>L</span>
+      <span class='loading-text-words'>O</span>
+      <span class='loading-text-words'>A</span>
+      <span class='loading-text-words'>D</span>
+      <span class='loading-text-words'>I</span>
+      <span class='loading-text-words'>N</span>
+      <span class='loading-text-words'>G</span>
       </div>`;
-
+    
     main.append(loadingDiv);
   },
-
+  
   deleteLoader() {
     const loadingAnimation = document.querySelector('.loading');
     main.removeChild(loadingAnimation);
     return this.main;
   },
-
+  
   generateId() {
     return Math.floor(Math.random() * 100);
   },
-
+  
   save(key, val) {
     this[key] = val;
   },
-
+  
   update(key, val) {
     this.save(key, val);
     this.printCurrentResult();
   },
-
+  
   printCurrentResult() {
-    result.innerHTML = `Результат сложения: ${this.valsSum}`;
+    result.innerHTML = `Результат сложения: ${this.valSum}`;
   },
-
-  printAllResults() {
-    allResults.innerHTML = '';
-    allResults.appendChild(this.items);
-    allResults.appendChild(this.addItem);
-  },
-
+  
   generateButtonDelete() {
     const button = document.createElement('button');
-    button.innerHTML = `<i class="fas fa-backspace"></i>`;
+    button.innerHTML = `<i class='fas fa-backspace'></i>`;
     button.className = 'delete';
-
+    
     updateElementStyles(button, {
       backgroundColor: 'darkmagenta',
       color: 'antiquewhite',
       border: '1px solid',
       borderRadius: '20%',
     });
-
+    
     return button;
   },
-
+  
   createItem({ value, id }) {
     const item = {
       element: document.createElement('li'),
-      id: id || this.generateId(),
-      value: value || this.valsSum,
+      id: id || this.generateId().toString(),
+      value: value || this.valSum,
       button: this.generateButtonDelete(),
     };
     item.element.setAttribute('data-id', item.id);
@@ -133,13 +125,13 @@ const storage = {
       const parent = e.currentTarget.parentNode;
       this.removeItem(parent);
     });
-
+    
     return item;
   },
-
-  addItem(value, id) {
-    const item = this.createItem(value, id);
-
+  
+  addItem(value) {
+    const item = this.createItem({ value:value.value, id:value.id });
+    
     updateElementStyles(item.element, {
       listStyle: 'none',
       width: '20%',
@@ -151,24 +143,19 @@ const storage = {
       border: '1px solid blue',
       backgroundColor: 'goldenrod',
     });
-
-    this.items.push({ id: item.id, value: item.value });
-
-    //все ломает
-    // if (this.items.length <= 1) {
-    //   this.deleteLoader();
-    // }
-
+    
+    this.items.push({ id: item.value.id, value: item.value.value });
+    
     this.ul.appendChild(item.element);
   },
-
+  
   removeItem(itemId) {
     const attribute = itemId.getAttribute('data-id');
-
+    
     const item = this.items.find((item) => {
-      return item.id.toString() === attribute;
+      return item.id === attribute;
     });
-
+    
     if (item) {
       this.ul.removeChild(itemId);
       const index = this.items.indexOf(item);
@@ -185,7 +172,7 @@ const storage = {
 
 function updateElementStyles(el, propsObj, id) {
   id && (el.id = id);
-
+  
   for (let key in propsObj) {
     el.style.hasOwnProperty(key) && (el.style[key] = propsObj[key]);
   }
@@ -194,12 +181,12 @@ function updateElementStyles(el, propsObj, id) {
 async function getData(url) {
   try {
     const response = await fetch(url);
-    const data = await response.json();
-    storage.init(data);
+    return await response.json();
   } catch (e) {
     console.log(e);
   }
 }
+
 
 updateElementStyles(
   saveRes,
@@ -214,12 +201,11 @@ updateElementStyles(
   'saveRes',
 );
 
-document.querySelector('#input1').addEventListener('keyup', function ({ target: { value } }) {
+document.querySelector('#input1').addEventListener('keyup', function({ target: { value } }) {
   storage.update('val1', value);
 });
-document.querySelector('#input2').addEventListener('keyup', function ({ target: { value } }) {
+document.querySelector('#input2').addEventListener('keyup', function({ target: { value } }) {
   storage.update('val2', value);
 });
-document.querySelector('#saveRes').addEventListener('click', () => storage.addItem(storage.valsSum));
-
-getData(requestUrl);
+document.querySelector('#saveRes').addEventListener('click', () => storage.addItem(storage.valSum));
+storage.init(requestUrl);
