@@ -5,6 +5,10 @@ const container = document.querySelector('.container');
 const main = document.querySelector('.main');
 const requestUrl = './data.json';
 const result = document.querySelector('#result-div');
+const wrapperModal = document.createElement('div');
+const button = document.createElement('button');
+const modal = document.createElement('div');
+
 
 allResults.id = 'allResults';
 container.prepend(saveRes);
@@ -121,6 +125,7 @@ const storage = {
     item.button.addEventListener('click', (e) => {
       const parent = e.currentTarget.parentNode;
       this.removeItem(parent);
+      parent.remove();
     });
     
     return item;
@@ -166,16 +171,56 @@ const storage = {
     }
   },
   
-  localStorageCustom({key, entity = '' }, action) {
-    switch (action) {
-      case 'set':
-        localStorage.setItem(key, entity);
-        break;
-      case 'get':
-        localStorage.getItem(key);
-        break;
-      default:
-        break;
+  createModal(args) {
+    main.append(wrapperModal);
+    button.innerText = 'Ok';
+    wrapperModal.append(modal);
+    wrapperModal.prepend(button);
+    button.addEventListener('click', (e) => {
+      const parent = e.currentTarget.parentNode;
+      parent.remove();
+    });
+    modal.innerText = args;
+    updateElementStyles(wrapperModal, {
+      position: 'fixed',
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      backgroundColor: '#860d3fa6',
+    });
+    updateElementStyles(button, {
+      margin: '26% 0 0 68%',
+      position: 'fixed',
+    });
+    updateElementStyles(modal, {
+      padding: '20px',
+      border: '5px solid #866a0d83',
+      textAlign: 'center',
+      borderRadius: '10px',
+      backgroundColor: '#ffda00ad',
+      color: '#6c0a30',
+      boxShadow: '5px 10px 5px #a0924552',
+      margin: '25% auto',
+      width: '750px',
+    });
+  },
+  
+  localStorageCustom(action, { key, entity = '' }) {
+    if (key) {
+      switch (action) {
+        case 'set':
+          localStorage.setItem(key, entity);
+          break;
+        case 'get':
+          localStorage.getItem(key);
+          break;
+        default:
+          this.createModal('Метод не определен');
+          break;
+      }
+    } else if (!key) {
+      this.createModal('Ключ не задан');
     }
   },
 };
@@ -197,7 +242,7 @@ async function getData(url) {
   }
 }
 
-storage.localStorageCustom({key:'test', entity:'testing'}, 'set');
+storage.localStorageCustom('set', { key:'test', entity:'testing' });
 
 updateElementStyles(
   saveRes,
